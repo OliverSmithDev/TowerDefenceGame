@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using UnityEngine.SceneManagement;
+
 
 public class RandomPath : MonoBehaviour
 {
@@ -12,9 +16,14 @@ public class RandomPath : MonoBehaviour
   [SerializeField] private int mapHeight;
 
 
-  private List<GameObject> mapTiles = new List<GameObject>();
-  private List<GameObject> pathTiles = new List<GameObject>();
+  public static List<GameObject> mapTiles = new List<GameObject>();
+  public static List<GameObject> pathTiles = new List<GameObject>();
 
+  public List<GameObject> MapTiles2;
+  [SerializeField]
+  public static GameObject startTile;
+  public static GameObject endTile;
+  
   private bool ReachedX = false;
   private bool ReachedY = false;
   private GameObject currentTile;
@@ -22,52 +31,51 @@ public class RandomPath : MonoBehaviour
   private int NextIndex;
 
   public Material pathColor;
+  public Material DefaultMat;
+  public Material startTileMaterial;
+  public Material endTileMaterial;
+
+  public bool ReGen;
   private void Start()
   {
      generateMap();
   }
 
-  
-
-  private List<GameObject> getTopEdgeTiles()
+  private void Update()
   {
-     List<GameObject> edgeTiles = new List<GameObject>();
-
-     for (int i = mapWidth * (mapHeight-1); i < mapWidth * mapHeight; i++)
+     if (ReGen == true)
      {
-        edgeTiles.Add(mapTiles[i]);
+        print("Regenerating");
+        ClearMap();
+        ReGen = false;
      }
-     return edgeTiles;
-  }
-  private List<GameObject> getBottomEdgeTiles()
-  {
-     List<GameObject> edgeTiles = new List<GameObject>();
 
-     for (int i = 0; i < mapWidth; i ++)
-     {
-        edgeTiles.Add(mapTiles[i]);
-     }
-     return edgeTiles;
-  }
+     MapTiles2 = mapTiles;
 
+  }
   private void MoveDown()
   {
+     currentTile.tag = "Path";
      pathTiles.Add(currentTile);
      currentIndex = mapTiles.IndexOf(currentTile);
      NextIndex = currentIndex-mapWidth;
+     //mapTiles.Remove(currentTile);
      currentTile = mapTiles[NextIndex];
   }
 
   private void MoveLeft()
   {
+     currentTile.tag = "Path";
      pathTiles.Add(currentTile);
      currentIndex = mapTiles.IndexOf(currentTile);
      NextIndex = currentIndex-1;
+     //mapTiles.Remove(currentTile);
      currentTile = mapTiles[NextIndex];
   }
 
   private void MoveRight()
   {
+     currentTile.tag = "Path";
      pathTiles.Add(currentTile);
      currentIndex = mapTiles.IndexOf(currentTile);
      NextIndex = currentIndex+1;
@@ -89,17 +97,19 @@ public class RandomPath : MonoBehaviour
       List<GameObject> topEdgeTiles = getTopEdgeTiles();
       List<GameObject> BottomEdgeTiles = getBottomEdgeTiles();
 
-      GameObject startTile;
-      GameObject endTile;
+      
 
       int rand1 = Random.Range(0, mapWidth);
       int rand2 = Random.Range(0, mapWidth);
 
       startTile = topEdgeTiles[rand1];
+      
       endTile = BottomEdgeTiles[rand2];
      
 
       currentTile = startTile;
+
+     
       MoveDown();
 
       int loopcount = 0;
@@ -152,20 +162,107 @@ public class RandomPath : MonoBehaviour
       {
          if (currentTile.transform.position.z > endTile.transform.position.z)
          {
-            MoveDown();
-            print("movingDown");
+          MoveDown();
+          print("movingDown");
          }
          else
          {
             ReachedY = true;
          }
-      }
-      pathTiles.Add((endTile));
+      } 
+      pathTiles.Add(endTile);
+      mapTiles.Remove(endTile);
+      // pathTiles.Add(startTile);
 
       foreach (GameObject obj in pathTiles)
       {
          obj.GetComponent<MeshRenderer>().material = pathColor;
       }
+     // mapTiles.Remove(startTile);
+      startTile.GetComponent<MeshRenderer>().material = startTileMaterial;
+      endTile.GetComponent<MeshRenderer>().material = endTileMaterial;
+
+     
+      foreach (GameObject Object in mapTiles.ToList())
+      {
+         if (Object.CompareTag("Path"))
+         {
+            if (mapTiles.Count > 1)
+            {
+               mapTiles.Remove(Object);
+            }
+         }
+      }
+      
+      foreach (var x in pathTiles)
+      { 
+         Debug.Log(x.ToString());
+      }
+      foreach (var x in mapTiles)
+      { 
+         Debug.Log(x.ToString());
+      }
+
+      
    }
 
-}
+  private List<GameObject> getTopEdgeTiles()
+  {
+     List<GameObject> edgeTiles = new List<GameObject>();
+
+     for (int i = mapWidth * (mapHeight-1); i < mapWidth * mapHeight; i++)
+     {
+        edgeTiles.Add(mapTiles[i]);
+     }
+     return edgeTiles;
+  }
+  private List<GameObject> getBottomEdgeTiles()
+  {
+     List<GameObject> edgeTiles = new List<GameObject>();
+
+     for (int i = 0; i < mapWidth; i ++)
+     {
+        edgeTiles.Add(mapTiles[i]);
+     }
+     return edgeTiles;
+     
+  }
+
+  
+  public void ClearMap()
+  {
+     /*
+     foreach (GameObject OBJ in pathTiles)
+     {
+        if (mapTiles.Contains(OBJ))
+        {
+           print("RemovedObj");
+           mapTiles.Remove(OBJ);
+        }
+     }*/
+
+     foreach (GameObject obj in mapTiles)
+     {
+           Destroy(obj);
+           print("DestroyedMapTiles");
+     }
+     
+     foreach (GameObject obj in pathTiles)
+     {
+           Destroy(obj);
+           print("DestroyedPathTile");
+     }
+
+        //Compare lists remove all duplicates from maptiles
+
+    
+
+        pathTiles.Clear();
+        mapTiles.Clear();
+        ReachedX = false;
+        ReachedY = false;
+        generateMap();
+     }
+  }
+
+
