@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class PlayerStats : MonoBehaviour
 {
+    
     public static int Money;
     public int startMonney = 400;
-
+    public int Money2;
     public static int Lives;
     public int startLives = 20;
 
@@ -19,6 +20,8 @@ public class PlayerStats : MonoBehaviour
 
     public void Update()
     {
+        Money2 = Money;
+        
         if(Lives <= 0)
         {
             SceneManager.LoadScene("EndScene");

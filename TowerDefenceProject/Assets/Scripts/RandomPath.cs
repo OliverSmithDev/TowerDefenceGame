@@ -35,6 +35,12 @@ public class RandomPath : MonoBehaviour
   public Material startTileMaterial;
   public Material endTileMaterial;
 
+  private int index;
+  private GameObject CurrentlySpawning;
+  public List<GameObject> Obstacles;
+  public List<GameObject> SpawnedObjectList;
+  public int SpawnableObjs;
+
   public bool ReGen;
   private void Start()
   {
@@ -55,6 +61,7 @@ public class RandomPath : MonoBehaviour
   }
   private void MoveDown()
   {
+     // makes the path go down and adds that new tile to the pathtile and gives tag path
      currentTile.tag = "Path";
      pathTiles.Add(currentTile);
      currentIndex = mapTiles.IndexOf(currentTile);
@@ -65,6 +72,7 @@ public class RandomPath : MonoBehaviour
 
   private void MoveLeft()
   {
+     // makes the path go left and adds that new tile to the pathtile and gives tag path
      currentTile.tag = "Path";
      pathTiles.Add(currentTile);
      currentIndex = mapTiles.IndexOf(currentTile);
@@ -75,6 +83,7 @@ public class RandomPath : MonoBehaviour
 
   private void MoveRight()
   {
+     // makes the path go right and adds that new tile to the pathtile and gives tag path
      currentTile.tag = "Path";
      pathTiles.Add(currentTile);
      currentIndex = mapTiles.IndexOf(currentTile);
@@ -83,6 +92,8 @@ public class RandomPath : MonoBehaviour
   }
   private void generateMap()
    {
+      // tile generation
+      
       for (int z = 0; z < mapHeight; z++)
       {
          for (int x = 0; x < mapWidth; x++)
@@ -125,10 +136,13 @@ public class RandomPath : MonoBehaviour
          }
          if (currentTile.transform.position.x > endTile.transform.position.x)
          {
+            // if end pos is to the left move to the left
+            
             MoveLeft();
             
             Counter++;
             if (Counter == Random.Range(1,3))
+               // randomly picks between 1,3 and moves down if it meets that number
             {
                MoveDown();
                print("movingDown");
@@ -139,10 +153,13 @@ public class RandomPath : MonoBehaviour
          }
          else if (currentTile.transform.position.x < endTile.transform.position.x)
          {
+            // if end pos is to the left move to the right
+            
             MoveRight();
             
             Counter++;
             if (Counter == Random.Range(1,3))
+               // randomly picks between 1,3 and moves down if it meets that number
             {
                MoveDown();
                print("movingDown");
@@ -160,6 +177,8 @@ public class RandomPath : MonoBehaviour
 
       while (!ReachedY)
       {
+         // checks if it is on same Z level and if not moves down
+         
          if (currentTile.transform.position.z > endTile.transform.position.z)
          {
           MoveDown();
@@ -176,15 +195,17 @@ public class RandomPath : MonoBehaviour
 
       foreach (GameObject obj in pathTiles)
       {
-         obj.GetComponent<MeshRenderer>().material = pathColor;
+         obj.GetComponent<MeshRenderer>().material = pathColor; // sets path colour
       }
-     // mapTiles.Remove(startTile);
+
       startTile.GetComponent<MeshRenderer>().material = startTileMaterial;
       endTile.GetComponent<MeshRenderer>().material = endTileMaterial;
 
      
       foreach (GameObject Object in mapTiles.ToList())
       {
+         // if tag is path remove the object from mamptiles
+         
          if (Object.CompareTag("Path"))
          {
             if (mapTiles.Count > 1)
@@ -202,12 +223,37 @@ public class RandomPath : MonoBehaviour
       { 
          Debug.Log(x.ToString());
       }
-
       
+      
+      // Spawn obstacles on the map 
+
+      index = Random.Range(0, Obstacles.Count);
+      CurrentlySpawning = Obstacles[index];
+
+      SpawnableObjs = mapTiles.Count / 2;
+
+      for (int i = 0; i < SpawnableObjs; i++)
+      {
+         index = Random.Range(0, Obstacles.Count);
+         CurrentlySpawning = Obstacles[index];
+         int spawnIndex = Random.Range(0, mapTiles.Count);
+        GameObject SpawnOBJ = Instantiate(CurrentlySpawning, mapTiles[spawnIndex].transform.position,
+            mapTiles[spawnIndex].transform.rotation);
+         SpawnedObjectList.Add(SpawnOBJ);
+         Destroy(mapTiles[spawnIndex]);
+         mapTiles.Remove(mapTiles[spawnIndex]);
+         
+      }
+
+      SpawnWave.Test1 = true;
+
+
    }
 
   private List<GameObject> getTopEdgeTiles()
   {
+     // Find top row tiles
+     
      List<GameObject> edgeTiles = new List<GameObject>();
 
      for (int i = mapWidth * (mapHeight-1); i < mapWidth * mapHeight; i++)
@@ -218,6 +264,8 @@ public class RandomPath : MonoBehaviour
   }
   private List<GameObject> getBottomEdgeTiles()
   {
+     // Find bottom row tiles
+     
      List<GameObject> edgeTiles = new List<GameObject>();
 
      for (int i = 0; i < mapWidth; i ++)
@@ -231,16 +279,14 @@ public class RandomPath : MonoBehaviour
   
   public void ClearMap()
   {
-     /*
-     foreach (GameObject OBJ in pathTiles)
-     {
-        if (mapTiles.Contains(OBJ))
-        {
-           print("RemovedObj");
-           mapTiles.Remove(OBJ);
-        }
-     }*/
 
+      // Clear all lists and destroy all objects in scene - then rerun generatemap function
+   
+     foreach (GameObject obj in SpawnedObjectList)
+     {
+        Destroy(obj);
+        print("DestroyedObstacles");
+     }
      foreach (GameObject obj in mapTiles)
      {
            Destroy(obj);
@@ -253,12 +299,9 @@ public class RandomPath : MonoBehaviour
            print("DestroyedPathTile");
      }
 
-        //Compare lists remove all duplicates from maptiles
-
-    
-
         pathTiles.Clear();
         mapTiles.Clear();
+        SpawnedObjectList.Clear();
         ReachedX = false;
         ReachedY = false;
         generateMap();

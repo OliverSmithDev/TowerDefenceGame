@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 181497275285569688}
   - component: {fileID: 2260308724666499886}
   - component: {fileID: 6101238953025050738}
+  - component: {fileID: -5716640832279117781}
   m_Layer: 0
   m_Name: enemy_ufoGreen
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -108,10 +109,28 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1838650345332842829}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3a81cb085b2e3948834cf6fae028272, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   EnemyHealth: 50
   MovementSpeed: 1
+--- !u!114 &-5716640832279117781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1838650345332842829}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1503ba521d8ecd641bf277347f5fe2e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  health: 100
+  value: 10
+  EnemyHealth: 50
+  MovementSpeed: 1
+  targetTile: {fileID: 0}

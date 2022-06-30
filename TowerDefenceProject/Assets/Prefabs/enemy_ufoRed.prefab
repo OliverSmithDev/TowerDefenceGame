@@ -13,9 +13,10 @@ GameObject:
   - component: {fileID: 5016779845093253693}
   - component: {fileID: 2369993865353611067}
   - component: {fileID: 4336379067723154217}
+  - component: {fileID: 9152529147446403805}
   m_Layer: 0
   m_Name: enemy_ufoRed
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -95,7 +96,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6818400084308313064}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3a81cb085b2e3948834cf6fae028272, type: 3}
   m_Name: 
@@ -116,3 +117,21 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 3952881745719177022, guid: 5d205f57538f8f04ebae31ec588ef33f, type: 3}
+--- !u!114 &9152529147446403805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6818400084308313064}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1503ba521d8ecd641bf277347f5fe2e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 10
+  health: 100
+  value: 10
+  EnemyHealth: 50
+  MovementSpeed: 1
+  targetTile: {fileID: 0}

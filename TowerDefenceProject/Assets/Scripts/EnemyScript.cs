@@ -16,6 +16,8 @@ public class EnemyScript : MonoBehaviour
 
     private GameObject targetTile;
 
+    public static int DamageInt;
+
     private void Start()
     {
         SpawnEnemy();
@@ -28,7 +30,7 @@ public class EnemyScript : MonoBehaviour
 
     public void TakeDamage(float amount)
     {
-        EnemyHealth -= amount;
+        EnemyHealth -= DamageInt;
         if (EnemyHealth <= 0)
         {
             die();    

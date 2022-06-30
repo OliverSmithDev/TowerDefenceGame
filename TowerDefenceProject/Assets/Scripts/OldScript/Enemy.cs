@@ -12,39 +12,39 @@ public class Enemy : MonoBehaviour
     public int health = 100;
     public int value = 10;
 
+    
+    
+    /// <summary>
+    /// 
+    /// </summary>
+    
+    [SerializeField]
+    private float EnemyHealth;
+    [SerializeField]
+    private float MovementSpeed;
+
+    private int KillReward;
+    
+    private int Damage;
+
+    public GameObject targetTile;
+
+    public static int DamageInt;
+
+    
     private void Start()
     {
-        target = Waypoints.points[0];
+     
+       SpawnEnemy();
     }
 
-    void Update()
+    
+   
+    private void SpawnEnemy()
     {
-        Vector3 dir = target.position - transform.position;
-        transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
-
-        if(Vector3.Distance(transform.position, target.position) <= 0.2f)
-        {
-            GetNextWaypoint();
-        }
+        targetTile = RandomPath.startTile;
     }
-
-    void GetNextWaypoint()
-    {
-        if(wavepointIndex >= Waypoints.points.Length - 1)
-        {
-            EndPath();
-            return;
-        }
-        wavepointIndex++;
-        target = Waypoints.points[wavepointIndex];
-    }
-
-    void EndPath()
-    {
-        PlayerStats.Lives--;
-        Destroy(gameObject);
-    }
-
+    
     public void TakeDamage(int amount)
     {
         health -= amount;
@@ -60,6 +60,51 @@ public class Enemy : MonoBehaviour
         PlayerStats.Money += value;
         Debug.Log("MoneyGiven");
         Destroy(gameObject);
+    }
+    
+    private void MoveEnemy()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, targetTile.transform.position,
+            MovementSpeed * Time.deltaTime);
+    }
+
+    private void CheckPos()
+    {
+        if(targetTile != null && targetTile != RandomPath.endTile)
+        {
+            float distance = (transform.position - targetTile.transform.position).magnitude;
+
+            if (distance < 0.001f)
+            {
+                int currentIndex = RandomPath.pathTiles.IndexOf(targetTile);
+
+                targetTile = RandomPath.pathTiles[currentIndex + 1];
+            }
+        }
+        
+        else if (targetTile == RandomPath.endTile)
+        {
+            float distance = (transform.position - targetTile.transform.position).magnitude;
+            if (distance < 0.001f)
+            {
+                DoDamage();
+                Die();
+            }
+        }
+    }
+    private void DoDamage()
+    {
+        print("EndTileReached");
+        
+        // Remove life from players base
+    }
+    
+    private void Update()
+    {
+        CheckPos();
+        MoveEnemy();
+
+        TakeDamage(0);
     }
 
 }
