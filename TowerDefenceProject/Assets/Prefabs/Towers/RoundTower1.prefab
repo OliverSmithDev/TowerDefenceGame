@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3983629566822759775}
   m_Layer: 0
   m_Name: RoundTower1
-  m_TagString: Untagged
+  m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -69,7 +69,7 @@ MonoBehaviour:
   range: 3
   enemyTag: Enemy
   partToRotate: {fileID: 1819720761167696488}
-  turnSpeed: 10
+  turnSpeed: 20
   fireRate: 0.2
   bulletPrefab: {fileID: 1097685005706246713, guid: cf48f1aa60923f141a48f188edc7dc81, type: 3}
   firePoint: {fileID: 1819720761167696488}

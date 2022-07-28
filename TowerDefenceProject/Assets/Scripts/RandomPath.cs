@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -41,14 +42,22 @@ public class RandomPath : MonoBehaviour
   public List<GameObject> SpawnedObjectList;
   public int SpawnableObjs;
 
+  
+  public List<GameObject> Enemys;
+
+  public Node nodes;
   public bool ReGen;
+  public bool CanGen;
   private void Start()
   {
-     generateMap();
+     //generateMap();
   }
 
   private void Update()
   {
+
+     mapHeight = TextInRuntime.MapHeight;
+     mapWidth = TextInRuntime.MapWidth;
      if (ReGen == true)
      {
         print("Regenerating");
@@ -56,6 +65,13 @@ public class RandomPath : MonoBehaviour
         ReGen = false;
      }
 
+     if (CanGen == true)
+     {
+        
+        generateMap();
+        CanGen = false;
+
+     }
      MapTiles2 = mapTiles;
 
   }
@@ -237,11 +253,21 @@ public class RandomPath : MonoBehaviour
          index = Random.Range(0, Obstacles.Count);
          CurrentlySpawning = Obstacles[index];
          int spawnIndex = Random.Range(0, mapTiles.Count);
-        GameObject SpawnOBJ = Instantiate(CurrentlySpawning, mapTiles[spawnIndex].transform.position,
+         GameObject SpawnOBJ = Instantiate(CurrentlySpawning, mapTiles[spawnIndex].transform.position,
             mapTiles[spawnIndex].transform.rotation);
          SpawnedObjectList.Add(SpawnOBJ);
          Destroy(mapTiles[spawnIndex]);
          mapTiles.Remove(mapTiles[spawnIndex]);
+         
+      }
+
+
+      foreach (GameObject path in pathTiles)
+      {
+         //nodes = GetComponent<Node>();
+         //Destroy (GetComponent<Node>());
+         path.GetComponent<Node>().enabled = false;
+         print("RemovedNode");
          
       }
 
@@ -298,6 +324,21 @@ public class RandomPath : MonoBehaviour
            Destroy(obj);
            print("DestroyedPathTile");
      }
+     
+     
+     GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+     foreach(GameObject enemy in enemies)
+        GameObject.Destroy(enemy);
+
+     GameObject[] Towers = GameObject.FindGameObjectsWithTag("Tower");
+     foreach(GameObject tower in Towers)
+        GameObject.Destroy(tower);
+     
+     SpawnWave.waveIndex = 0;
+
+     Base.EnergyProduced = 50;
+     Base.EnergyUsed = 0;
+     Base.baseHealth = 20;
 
         pathTiles.Clear();
         mapTiles.Clear();

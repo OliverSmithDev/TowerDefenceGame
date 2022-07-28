@@ -28,13 +28,15 @@ public class BuildManger : MonoBehaviour
 
     public void BuildTurretOn (Node node)
     {
-       if (PlayerStats.Money < turretToBuild.cost)
+       if (PlayerStats.Money < turretToBuild.cost || Base.EnergyProduced <= Base.EnergyUsed)
         {
             Debug.Log("No Money");
             return;
         }
 
         PlayerStats.Money -= turretToBuild.cost;
+        Base.EnergyUsed += turretToBuild.EnergyCost;
+        print(Base.EnergyUsed);
 
         GameObject turret = (GameObject) Instantiate(turretToBuild.prefab, node.GetBuildPosition(), Quaternion.identity);
         node.turret = turret;

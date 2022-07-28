@@ -8,7 +8,7 @@ public class SpawnWave : MonoBehaviour
     private int Index;
     public GameObject CurrentlySpawning;
     
-    private int waveIndex = 0;
+    public static int waveIndex = 0;
 
     public GameObject spawnPoint;
 

@@ -4,28 +4,28 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    public float speed = 10f;
+   
 
     private Transform target;
     private int wavepointIndex = 0;
 
     public int health = 100;
     public int value = 10;
-
+    
+    
     
     
     /// <summary>
     /// 
     /// </summary>
     
-    [SerializeField]
-    private float EnemyHealth;
+   
     [SerializeField]
     private float MovementSpeed;
 
-    private int KillReward;
+    public int KillReward;
     
-    private int Damage;
+    public int Damage;
 
     public GameObject targetTile;
 
@@ -95,7 +95,10 @@ public class Enemy : MonoBehaviour
     private void DoDamage()
     {
         print("EndTileReached");
-        
+
+        Base.baseHealth -= Damage;
+        print(Base.baseHealth);
+
         // Remove life from players base
     }
     
