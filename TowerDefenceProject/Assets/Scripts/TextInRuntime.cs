@@ -10,6 +10,8 @@ public class TextInRuntime : MonoBehaviour
     private string MapWidthString;
     public static int MapHeight;
     public static int MapWidth;
+    
+    public GameObject MapGen;
 
     public InputField IfieldHeight;
 
@@ -41,7 +43,7 @@ public class TextInRuntime : MonoBehaviour
         
         MapHeight = Int32.Parse(MapHeightString);
         MapWidth = Int32.Parse(MapHeightString);
-
+        MapGen.SetActive(false);
     }
 
 }

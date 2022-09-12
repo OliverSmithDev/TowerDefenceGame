@@ -48,6 +48,8 @@ public class RandomPath : MonoBehaviour
   public Node nodes;
   public bool ReGen;
   public bool CanGen;
+  
+  public GameObject MapMenu;
   private void Start()
   {
      //generateMap();
@@ -109,6 +111,16 @@ public class RandomPath : MonoBehaviour
   private void generateMap()
    {
       // tile generation
+
+      if (MapMenu.activeInHierarchy)
+      {
+         MapMenu.SetActive(false);
+      }
+      
+      else if (MapMenu.activeInHierarchy)
+      {
+         
+      }
       
       for (int z = 0; z < mapHeight; z++)
       {
@@ -272,7 +284,7 @@ public class RandomPath : MonoBehaviour
       }
 
       SpawnWave.Test1 = true;
-
+      
 
    }
 
